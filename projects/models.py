@@ -25,6 +25,16 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        """Save project instance. If new instance add author in contributors"""
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        if is_new:
+            self.add_contributor(self.author)
+
+    def add_contributor(self, user):
+        Contributor.objects.create(project=self, user=user)
 
 class Contributor(models.Model):
     """Contributor model. Connection between user and project. """
@@ -44,4 +54,4 @@ class Contributor(models.Model):
         unique_together = ('user', 'project')
 
     def __str__(self):
-        return f"self.user.username contribut {self.project.name}"
+        return f"{self.user.username} contribut {self.project.name}"

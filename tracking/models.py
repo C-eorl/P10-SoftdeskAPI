@@ -49,7 +49,7 @@ class Issue(models.Model):
         on_delete=models.CASCADE,
         related_name='issues',
     )
-    assignee = models.ForeignKey(
+    assigned_to = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,

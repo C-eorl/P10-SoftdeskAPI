@@ -39,15 +39,15 @@ class ProjectDetailSerializer(ModelSerializer):
 
 class ProjectListSerializer(ModelSerializer):
     """ Serializer for Project objects (list & create)"""
-    contributor_count = serializers.SerializerMethodField()
+    contributors_count = serializers.SerializerMethodField()
     
     class Meta:
         model = Project
         fields = [
-            'id', 'name', 'description', 'type', 'author_id',
-            'contributor_count', 'created_at',
+            'id', 'name', 'description', 'type',
+            'contributors_count', 'created_at',
         ]
 
-    def get_contributor_count(self, obj):
+    def get_contributors_count(self, obj):
         """ Return number of contributors """
         return obj.contributors.count()

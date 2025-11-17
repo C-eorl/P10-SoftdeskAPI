@@ -1,6 +1,3 @@
-from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from projects.models import Project, Contributor
@@ -13,6 +10,16 @@ class ProjectViewset(ModelViewSet):
     detail_serializer_class = ProjectDetailSerializer
     queryset = Project.objects.all()
 
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ProjectDetailSerializer
+        return ProjectListSerializer
+
+    def perform_create(self, serializer):
+        """Add project's author to contributor"""
+        project = serializer.save(author=self.request.user)
+        project.add_contributor(project.author)
+
 
 class ContributorViewset(ReadOnlyModelViewSet):
     serializer_class = ContributorListSerializer
@@ -20,5 +27,6 @@ class ContributorViewset(ReadOnlyModelViewSet):
 
 
     def get_queryset(self):
+        """Return contributors to project"""
         projet_id = self.kwargs['project_pk']
         return Contributor.objects.filter(project_id=projet_id)

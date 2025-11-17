@@ -1,6 +1,9 @@
+from datetime import date
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
 User = get_user_model()
 
 class UserTestCase(TestCase):
@@ -8,15 +11,22 @@ class UserTestCase(TestCase):
     def setUpTestData(cls):
         cls.user_default = User.objects.create_user(
             username="testuser",
+            email="testuser@test",
+            first_name="test",
+            last_name="test",
             password="password",
-            age=25
+            date_of_birth=date(2000, 10, 27),
         )
     def setUp(self):
         self.minor_user = User(
-            username="minor",
+            username="testuser",
+            email="testuser@test",
+            first_name="test",
+            last_name="test",
             password="password",
-            age=15
+            date_of_birth=date(2015, 10, 27),
         )
+
 
     def test_create_user(self):
         """Test creating a new default user"""

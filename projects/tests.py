@@ -34,6 +34,7 @@ class ProjectTestCase(TestCase):
             project=cls.project,
             author=cls.user,
         )
+
     def test_create_project(self):
         """Test that project model creation works"""
         self.assertEqual(self.project.name, 'Test Project')

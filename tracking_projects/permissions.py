@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from projects.models import Project
+from tracking_projects.models import Project
 
 
 class IsTrackingContributor(permissions.BasePermission):
@@ -24,3 +24,12 @@ class IsTrackingContributor(permissions.BasePermission):
         else:
             return False
         return project.contributors.filter(user=request.user).exists()
+
+
+class IsProjectContributor(permissions.BasePermission):
+    """Permission class to check if a user is contributor to project"""
+
+    message = "Vous devez être contributeur de ce projet pour y accéder."
+
+    def has_object_permission(self, request, view, obj):
+        return obj.contributors.filter(user=request.user).exists()

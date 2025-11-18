@@ -1,6 +1,8 @@
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from projects.models import Project, Contributor
+from projects.permissions import IsProjectContributor
 from projects.serializers import ProjectListSerializer, ProjectDetailSerializer, ContributorListSerializer, \
     ContributorDetailSerializer
 
@@ -9,6 +11,7 @@ class ProjectViewset(ModelViewSet):
     serializer_class = ProjectListSerializer
     detail_serializer_class = ProjectDetailSerializer
     queryset = Project.objects.all()
+    permission_classes = [IsAuthenticated, IsProjectContributor]
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

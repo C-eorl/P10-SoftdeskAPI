@@ -3,9 +3,9 @@ from rest_framework import permissions
 from tracking_projects.models import Project
 
 
-class IsTrackingContributor(permissions.BasePermission):
+class IsContributor(permissions.BasePermission):
     """Permission to check if a user is project contributor """
-    message = "Vous devez être contributeur du projet pour accéder à cette issue/comments"
+    message = "Vous devez être contributeur du projet pour accéder à l'ensemble di projet"
     def has_permission(self, request, view):
         project_id = view.kwargs.get('project_pk')
         project = Project.objects.get(pk=project_id)
@@ -21,15 +21,18 @@ class IsTrackingContributor(permissions.BasePermission):
             project = obj.project
         elif hasattr(obj, 'issue'):
             project = obj.issue.project
+        elif type(obj) is Project:
+            project = obj
         else:
             return False
         return project.contributors.filter(user=request.user).exists()
 
 
-class IsProjectContributor(permissions.BasePermission):
-    """Permission class to check if a user is contributor to project"""
-
-    message = "Vous devez être contributeur de ce projet pour y accéder."
-
+class IsAuthor(permissions.BasePermission):
+    """Permission to check if a user is author """
     def has_object_permission(self, request, view, obj):
-        return obj.contributors.filter(user=request.user).exists()
+        if hasattr(obj, 'author'):
+            author = obj.author
+        else:
+            return False
+        return author == request.user

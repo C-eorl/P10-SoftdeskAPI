@@ -9,7 +9,6 @@ class IsContributor(permissions.BasePermission):
     message = "Vous devez être contributeur du projet pour accéder à l'ensemble du projet"
 
     def has_permission(self, request, view):
-
         if view.kwargs.get('project_pk'):
             project_id = view.kwargs.get('project_pk')
             project = Project.objects.get(pk=project_id)
@@ -46,6 +45,11 @@ class IsAuthor(permissions.BasePermission):
     def has_permission(self, request, view):
         kwargs = view.kwargs
 
+        # Cas Contributor
+        if all(k in kwargs for k in ["project_pk", "pk"]):
+            project_id = view.kwargs.get('project_pk')
+            project = Project.objects.get(pk=project_id)
+            return project.author == request.user
         # Cas Comment
         if all(k in kwargs for k in ["project_pk", "issue_pk", "pk"]):
             comments_pk = view.kwargs.get('pk')

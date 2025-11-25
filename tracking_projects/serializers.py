@@ -1,64 +1,162 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.fields import SerializerMethodField
+from rest_framework.serializers import ModelSerializer, Serializer
+from django.contrib.auth import get_user_model
 from tracking_projects.models import Project, Contributor
 from tracking_projects.models import Issue, Comment
 
+User = get_user_model()
+
+
+##########################################################################
+#                            Serializers Comments
+##########################################################################
 
 class CommentListSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.username', read_only=True)
+
     class Meta:
         model = Comment
-        fields = 'id', 'issue_id', 'description', 'author'
+        fields = ['uuid', 'description', 'author', 'author_name', 'created_at']
 
 
-class CommentDetailSerializer(serializers.HyperlinkedModelSerializer):
+class CommentDetailSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.username', read_only=True)
+    issue_title = serializers.CharField(source='issue.title', read_only=True)
+
     class Meta:
         model = Comment
-        fields = 'id', 'uuid', 'description', 'issue', 'author', 'created_at'
+        fields = [
+            'uuid', 'description', 'issue', 'issue_title',
+            'author', 'author_name', 'created_at'
+        ]
 
 
+class CreateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = [
+            'description',
+        ]
+
+
+##########################################################################
+#                            Serializers Issues
+##########################################################################
 class IssueDetailSerializer(serializers.ModelSerializer):
     comments = CommentListSerializer(many=True, read_only=True)
+    project_name = serializers.CharField(source='project.name', read_only=True)
+    author_name = serializers.CharField(source='author.username', read_only=True)
+    assigned_to_name = serializers.CharField(
+        source='assigned_to.username',
+        read_only=True,
+        allow_null=True
+    )
 
     class Meta:
         model = Issue
         fields = [
-            'id', 'title', 'description', 'project_id',
-            'author', 'author_id', 'assigned_to',
+            'id', 'title', 'description', 'project', 'project_name',
+            'author', 'author_name', 'assigned_to', 'assigned_to_name',
             'priority', 'tag', 'status', 'comments', 'created_at'
         ]
 
 
 class IssueListSerializer(serializers.ModelSerializer):
-    comments_count = serializers.SerializerMethodField()
+    comments_count = serializers.IntegerField(source='comments.count', read_only=True)
+    author_name = serializers.CharField(source='author.username', read_only=True)
 
     class Meta:
         model = Issue
         fields = [
-            'id', 'title', 'project_id', 'status',
-            'author_id', 'comments_count', 'created_at'
+            'id', 'title', 'project', 'status', 'priority', 'tag',
+            'author', 'author_name', 'assigned_to', 'comments_count'
         ]
 
-    def get_comments_count(self, obj):
-        return obj.comments.count()
+
+class CreateIssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
+        fields = [
+            'title', 'description', 'assigned_to',
+            'status', 'priority', 'tag'
+        ]
+
+    def validate_assigned_to(self, value):
+        """Validate that assigned user is a contributor of the project"""
+        if value:
+            project = self.context.get('project')
+            if project and not Contributor.objects.filter(
+                    project=project,
+                    user=value
+            ).exists():
+                raise serializers.ValidationError(
+                    "L'utilisateur assigné doit être un contributeur du projet."
+                )
+        return value
 
 
+##########################################################################
+#                            Serializers Contributors
+##########################################################################
 class ContributorDetailSerializer(ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
+    project_name = serializers.CharField(source='project.name', read_only=True)
+
     class Meta:
         model = Contributor
-        fields = '__all__'
+        fields = [
+            'id', 'user', 'username', 'email',
+            'project', 'project_name', 'created_at'
+        ]
 
 
 class ContributorListSerializer(ModelSerializer):
-    username = serializers.SerializerMethodField()
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
 
     class Meta:
         model = Contributor
-        fields = 'id', 'username'
-
-    def get_username(self, obj):
-        return obj.user.username
+        fields = ['id', 'user', 'username', 'email', 'created_at']
 
 
+class CreateContributorSerializer(Serializer):
+    user_id = serializers.IntegerField()
+
+    def validate_user_id(self, value):
+        try:
+            User.objects.get(id=value)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Cet utilisateur n'existe pas.")
+        return value
+
+    def validate(self, attrs):
+        project = self.context.get('project')
+        user_id = attrs.get('user_id')
+
+        if Contributor.objects.filter(project=project, user=user_id).exists():
+            raise serializers.ValidationError(
+                "Cet utilisateur est déjà contributeur de ce projet."
+            )
+        return attrs
+
+    def save(self, **kwargs):
+        project = self.context.get('project')
+        user_id = self.validated_data['user_id']
+
+        user = User.objects.get(id=user_id)
+
+        contributor = Contributor.objects.create(
+            project=project,
+            user=user,
+        )
+        return contributor
+
+
+##########################################################################
+#                            Serializers Projects
+##########################################################################
 class ProjectDetailSerializer(ModelSerializer):
     """ Serializer for project detail """
     author = serializers.StringRelatedField(read_only=True)
@@ -71,6 +169,7 @@ class ProjectDetailSerializer(ModelSerializer):
             'id', 'name', 'description', 'type',
             'author', 'contributors', 'issues', 'created_at'
         ]
+        read_only_fields = ['id', 'author', 'contributors', 'issues', 'created_at']
 
 
 class ProjectListSerializer(ModelSerializer):
@@ -84,6 +183,7 @@ class ProjectListSerializer(ModelSerializer):
             'id', 'name', 'description', 'type',
             'contributors_count', 'issues_count', 'created_at',
         ]
+        read_only_fields = ['id', 'contributors_count', 'issues_count', 'created_at']
 
     def get_contributors_count(self, obj):
         """ Return number of contributors """
@@ -92,3 +192,11 @@ class ProjectListSerializer(ModelSerializer):
     def get_issues_count(self, obj):
         """ Return number of issues """
         return obj.issues.count()
+
+
+class CreateProjectSerializer(Serializer):
+    class Meta:
+        model = Project
+        fields = [
+            'name', 'description', 'type',
+        ]

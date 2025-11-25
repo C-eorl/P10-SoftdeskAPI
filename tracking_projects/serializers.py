@@ -194,7 +194,7 @@ class ProjectListSerializer(ModelSerializer):
         return obj.issues.count()
 
 
-class CreateProjectSerializer(Serializer):
+class CreateProjectSerializer(ModelSerializer):
     class Meta:
         model = Project
         fields = [

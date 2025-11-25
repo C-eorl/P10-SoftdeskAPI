@@ -5,7 +5,6 @@ from tracking_projects.views import ProjectViewset, ContributorViewset
 
 app_name = 'tracking_project'
 
-
 router = routers.DefaultRouter()
 router.register('projects', ProjectViewset, basename='projects')
 
@@ -24,7 +23,3 @@ urlpatterns = [
     path('', include(issues_router.urls)),
     path('', include(comments_router.urls)),
 ]
-
-
-
-

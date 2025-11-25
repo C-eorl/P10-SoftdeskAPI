@@ -29,6 +29,7 @@ class ProjectViewset(ModelViewSet):
     - Delete: DELETE /api/v1/projects/<int:project_id>
     """
 
+
     def get_queryset(self):
         """Return projects where user is a contributor"""
         user = self.request.user
@@ -57,6 +58,8 @@ class ProjectViewset(ModelViewSet):
     def perform_create(self, serializer):
         """Save project with current user as author"""
         serializer.save(author=self.request.user)
+
+
 
 
 class ContributorViewset(ModelViewSet):

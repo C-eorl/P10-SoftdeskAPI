@@ -1,12 +1,8 @@
-import jwt
-from django.contrib.auth.middleware import get_user
-from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from authentication.models import CustomUser
 from authentication.serializers import UserSerializer, SignupSerializer

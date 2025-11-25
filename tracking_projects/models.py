@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 import uuid
 from config import settings
@@ -57,8 +58,28 @@ class Issue(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['project', '-created_at']),
+            models.Index(fields=['author']),
+            models.Index(fields=['assigned_to']),
+            models.Index(fields=['status']),
+        ]
+
     def __str__(self):
         return f"[{self.tag}] {self.title}"
+
+    def clean(self):
+        """Validate that assigned_to is a contributor of the project"""
+        super().clean()
+        if self.assigned_to and self.project_id:
+            if not Contributor.objects.filter(
+                    project=self.project, user=self.assigned_to
+            ).exists():
+                raise ValidationError({
+                    'assigned_to': 'L\'utilisateur assigné doit être un contributeur du projet.'
+                })
 
 
 class Comment(models.Model):
@@ -67,6 +88,7 @@ class Comment(models.Model):
         default=uuid.uuid4,
         editable=False,
         unique=True,
+        primary_key=True,
     )
     description = models.TextField()
     issue = models.ForeignKey(
@@ -80,6 +102,12 @@ class Comment(models.Model):
         related_name='authored_comments',
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['issue', '-created_at']),
+        ]
 
     def __str__(self):
         return f"Comment {self.uuid} sur {self.issue.title}"
@@ -95,7 +123,7 @@ class Project(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = models.TextField(max_length=1024)
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -103,6 +131,12 @@ class Project(models.Model):
         related_name='authored_projects'
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['author', '-created_at']),
+        ]
 
     def __str__(self):
         return self.name
@@ -116,7 +150,7 @@ class Project(models.Model):
             self.add_contributor(self.author)
 
     def add_contributor(self, user):
-        Contributor.objects.create(project=self, user=user)
+        Contributor.objects.get_or_create(project=self, user=user)
 
 
 class Contributor(models.Model):
@@ -135,6 +169,10 @@ class Contributor(models.Model):
 
     class Meta:
         unique_together = ('user', 'project')
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['project', 'user']),
+        ]
 
     def __str__(self):
-        return f"{self.user.username} contribut {self.project.name}"
+        return f"{self.user.username} contribue {self.project.name}"

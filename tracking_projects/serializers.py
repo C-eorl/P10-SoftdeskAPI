@@ -1,3 +1,4 @@
+from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer, Serializer
@@ -23,14 +24,26 @@ class CommentListSerializer(serializers.ModelSerializer):
 class CommentDetailSerializer(serializers.ModelSerializer):
     author_name = serializers.CharField(source='author.username', read_only=True)
     issue_title = serializers.CharField(source='issue.title', read_only=True)
+    issue_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = [
-            'uuid', 'description', 'issue', 'issue_title',
+            'uuid', 'description', 'issue_url', 'issue', 'issue_title',
             'author', 'author_name', 'created_at'
         ]
 
+    def get_issue_url(self, obj):
+        """Return the URL to the parent issue"""
+        # TODO url Issue
+        request = self.context.get('request')
+        url = reverse('projects-issues-detail', kwargs={
+            'project_pk': obj.issue.project.id,
+            'pk': obj.issue.id
+        })
+        if request:
+            return request.build_absolute_uri(url)
+        return url
 
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:

@@ -15,7 +15,7 @@ issues_router = routers.NestedDefaultRouter(router, 'projects', lookup='project'
 issues_router.register(r'issues', IssuesViewset, basename='projects-issues')
 
 comments_router = routers.NestedDefaultRouter(issues_router, 'issues', lookup='issue')
-comments_router.register(r'comments', CommentsViewset, basename='issues-comments')
+comments_router.register(r'comments', CommentsViewset, basename='projects-issues-comments')
 
 urlpatterns = [
     path('', include(router.urls)),

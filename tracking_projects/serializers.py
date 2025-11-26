@@ -27,6 +27,7 @@ class CommentDetailSerializer(serializers.ModelSerializer):
     issue_url = serializers.SerializerMethodField()
 
     class Meta:
+
         model = Comment
         fields = [
             'uuid', 'description', 'issue_url', 'issue', 'issue_title',
@@ -35,9 +36,8 @@ class CommentDetailSerializer(serializers.ModelSerializer):
 
     def get_issue_url(self, obj):
         """Return the URL to the parent issue"""
-        # TODO url Issue
         request = self.context.get('request')
-        url = reverse('projects-issues-detail', kwargs={
+        url = reverse('tracking_project:projects-issues-detail', kwargs={
             'project_pk': obj.issue.project.id,
             'pk': obj.issue.id
         })

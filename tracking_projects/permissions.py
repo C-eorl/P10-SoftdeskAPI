@@ -43,10 +43,11 @@ class IsAuthor(permissions.BasePermission):
     message = "Vous devez être l'auteur de cette ressource pour modifier / supprimer"
 
     def has_permission(self, request, view):
+        print(f'1 {view.kwargs}')
         kwargs = view.kwargs
 
         # Cas Contributor
-        if all(k in kwargs for k in ["project_pk", "pk"]):
+        if all(k in kwargs for k in ["project_pk"]):
             project_id = view.kwargs.get('project_pk')
             project = Project.objects.get(pk=project_id)
             return project.author == request.user
@@ -71,9 +72,8 @@ class IsAuthor(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if hasattr(obj, 'author'):
-            author = obj.author
+            return obj.author == request.user
         elif hasattr(obj, 'project'):
             return obj.project.author == request.user
         else:
             return False
-        return author == request.user

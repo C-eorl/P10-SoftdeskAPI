@@ -88,7 +88,7 @@ class ContributorViewset(ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return [IsAuthenticated(), IsContributor()]
         if self.action in ['destroy', 'update', 'partial_update', 'create']:
-            return [IsAuthenticated(), IsContributor(), IsAuthor()]
+            return [IsAuthenticated(), IsAuthor()]
         return [IsAuthenticated()]
 
     def get_serializer_class(self):

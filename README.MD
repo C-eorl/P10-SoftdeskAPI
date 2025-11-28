@@ -160,7 +160,7 @@ Permissions utilisées:
 | Ressource       | Lire                         | Créer                            | Modifier / Supprimer           |
 |-----------------|------------------------------|----------------------------------|--------------------------------|
 | **Project**     | $\color{cyan}is-contributor$ | $\color{yellow}is-authenticated$ | $\color{red}is-author-project$ |
-| **Contributor** | $\color{cyan}is-contributor$ | \color{red}is-author-project$    | $\color{red}is-author-project$ |
+| **Contributor** | $\color{cyan}is-contributor$ | $\color{red}is-author-project$   | $\color{red}is-author-project$ |
 | **Issue**       | $\color{cyan}is-contributor$ | $\color{cyan}is-contributor$     | $\color{red}is-author-issue$   |
 | **Comment**     | $\color{cyan}is-contributor$ | $\color{cyan}is-contributor$     | $\color{red}is-author-comment$ |
 

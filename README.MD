@@ -153,9 +153,9 @@ Utilisez l'url pour acceder à l'API : `http://127.0.0.1:8000/api/v1/`
 ---
 ### - Permissions
 Permissions utilisées:
-- `IsAuthenticated` <code style="color:yellow">■</code> $${\color{red}TEST}$$
-- `IsContributor` <code style="color:cyan">■</code>
-- `IsAuthor` <code style="color:red">■</code>
+- `IsAuthenticated`  $${\color{yellow}■}$$
+- `IsContributor` $${\color{cyan}■}$$
+- `IsAuthor` $${\color{red}■}$$
 
 | Ressource       | Lire                                           | Créer                                              | Modifier / Supprimer                             |
 |-----------------|------------------------------------------------|----------------------------------------------------|--------------------------------------------------|

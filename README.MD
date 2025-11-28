@@ -157,12 +157,12 @@ Permissions utilisées:
 - `IsContributor` $${\color{cyan}■}$$
 - `IsAuthor` $${\color{red}■}$$   
 
-| Ressource       | Lire                             | Créer                                | Modifier / Supprimer               |
-|-----------------|----------------------------------|--------------------------------------|------------------------------------|
-| **Project**     | $${\color{cyan}is contributor}$$ | $${\color{yellow}is_authenticated}$$ | $${\color{red}is_author_project}$$ |
-| **Contributor** | $${\color{cyan}is_contributor}$$ | $${\color{red}is_author_project}$$   | $${\color{red}is_author_project}$$ |
-| **Issue**       | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_issue}$$   |
-| **Comment**     | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_comment}$$ |
+| Ressource       | Lire                                    | Créer                                | Modifier / Supprimer               |
+|-----------------|-----------------------------------------|--------------------------------------|------------------------------------|
+| **Project**     | ${\color{cyan}{\texts{is contributor}}$ | $${\color{yellow}is_authenticated}$$ | $${\color{red}is_author_project}$$ |
+| **Contributor** | $${\color{cyan}is_contributor}$$        | $${\color{red}is_author_project}$$   | $${\color{red}is_author_project}$$ |
+| **Issue**       | $${\color{cyan}is_contributor}$$        | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_issue}$$   |
+| **Comment**     | $${\color{cyan}is_contributor}$$        | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_comment}$$ |
 
 ---
 _Projet réalisée dans le contexte de la formation Developpeur Python - OpenClassRoom_

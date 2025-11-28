@@ -153,16 +153,16 @@ Utilisez l'url pour acceder à l'API : `http://127.0.0.1:8000/api/v1/`
 ---
 ### - Permissions
 Permissions utilisées:
-- `IsAuthenticated`  $${\color{yellow}■}$$
-- `IsContributor` $${\color{cyan}■}$$
-- `IsAuthor` $${\color{red}■}$$
+- `IsAuthenticated`  $${\color{yellow}■}$$  $${\color{yellow}is_authenticated}$$
+- `IsContributor` $${\color{cyan}■}$$   $${\color{cyan}is__contributor}$$
+- `IsAuthor` $${\color{red}■}$$   $${\color{red}is_author}$$
 
-| Ressource       | Lire                                           | Créer                                              | Modifier / Supprimer                             |
-|-----------------|------------------------------------------------|----------------------------------------------------|--------------------------------------------------|
-| **Project**     | <span style="color:cyan">is_contributor</span> | <span style="color:yellow">is_authenticated</span> | <span style="color:red">is_author_project</span> |
-| **Contributor** | <span style="color:cyan">is_contributor</span> | <span style="color:red">is_author_project</span>   | <span style="color:red">is_author_project</span> |
-| **Issue**       | <span style="color:cyan">is_contributor</span> | <span style="color:cyan">is_contributor</span>     | <span style="color:red">is_author_issue</span>   |
-| **Comment**     | <span style="color:cyan">is_contributor</span> | <span style="color:cyan">is_contributor</span>     | <span style="color:red">is_author_comment</span> |
+| Ressource       | Lire                             | Créer                                | Modifier / Supprimer               |
+|-----------------|----------------------------------|--------------------------------------|------------------------------------|
+| **Project**     | $${\color{cyan}is_contributor}$$ | $${\color{yellow}is_authenticated}$$ | $${\color{red}is_author_project}$$ |
+| **Contributor** | $${\color{cyan}is_contributor}$$ | $${\color{red}is_author_project}$$   | $${\color{red}is_author_project}$$ |
+| **Issue**       | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_issue}$$   |
+| **Comment**     | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_comment}$$ |
 
 ---
 _Projet réalisée dans le contexte de la formation Developpeur Python - OpenClassRoom_

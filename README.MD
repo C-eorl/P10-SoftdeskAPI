@@ -153,16 +153,16 @@ Utilisez l'url pour acceder à l'API : `http://127.0.0.1:8000/api/v1/`
 ---
 ### - Permissions
 Permissions utilisées:
-- `IsAuthenticated`  $${\color{yellow}■}$$  $${\color{yellow}is_authenticated}$$
-- `IsContributor` $${\color{cyan}■}$$   $${\color{cyan}is__contributor}$$
-- `IsAuthor` $${\color{red}■}$$   $${\color{red}is_author}$$
+- `IsAuthenticated`  $${\color{yellow}■}$$
+- `IsContributor` $${\color{cyan}■}$$
+- `IsAuthor` $${\color{red}■}$$   
 
-| Ressource       | Lire                             | Créer                                | Modifier / Supprimer               |
-|-----------------|----------------------------------|--------------------------------------|------------------------------------|
-| **Project**     | $${\color{cyan}is_contributor}$$ | $${\color{yellow}is_authenticated}$$ | $${\color{red}is_author_project}$$ |
-| **Contributor** | $${\color{cyan}is_contributor}$$ | $${\color{red}is_author_project}$$   | $${\color{red}is_author_project}$$ |
-| **Issue**       | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_issue}$$   |
-| **Comment**     | $${\color{cyan}is_contributor}$$ | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_comment}$$ |
+| Ressource       | Lire                              | Créer                                | Modifier / Supprimer               |
+|-----------------|-----------------------------------|--------------------------------------|------------------------------------|
+| **Project**     | $${\color{cyan}is__contributor}$$ | $${\color{yellow}is_authenticated}$$ | $${\color{red}is_author_project}$$ |
+| **Contributor** | $${\color{cyan}is_contributor}$$  | $${\color{red}is_author_project}$$   | $${\color{red}is_author_project}$$ |
+| **Issue**       | $${\color{cyan}is_contributor}$$  | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_issue}$$   |
+| **Comment**     | $${\color{cyan}is_contributor}$$  | $${\color{cyan}is_contributor}$$     | $${\color{red}is_author_comment}$$ |
 
 ---
 _Projet réalisée dans le contexte de la formation Developpeur Python - OpenClassRoom_

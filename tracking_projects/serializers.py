@@ -1,6 +1,5 @@
 from django.urls import reverse
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer, Serializer
 from django.contrib.auth import get_user_model
 from tracking_projects.models import Project, Contributor

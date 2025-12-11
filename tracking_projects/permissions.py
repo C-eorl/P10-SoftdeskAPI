@@ -47,25 +47,26 @@ class IsAuthor(permissions.BasePermission):
 
 
         # Cas Comment
-        if all(k in kwargs for k in ["project_pk", "issue_pk", "pk"]):
+        if getattr(view, 'basename', None) == 'projects-issues-comments':
             comments_pk = view.kwargs.get('pk')
             comments = Comment.objects.get(pk=comments_pk)
             return comments.author == request.user
 
-        # Cas Issue
-        if all(k in kwargs for k in ["project_pk", "pk"]):
-            issues_pk = view.kwargs.get('pk')
-            issues = Issue.objects.get(pk=issues_pk)
-            return issues.author == request.user
-
         # Cas contributor
-        if all(k in kwargs for k in ["project_pk"]):
+        if getattr(view, 'basename', None) == 'project-contributors':
             project_id = view.kwargs.get('project_pk')
             project = Project.objects.get(pk=project_id)
             return project.author == request.user
 
+        # Cas Issue
+        if getattr(view, 'basename', None) == 'projects-issues':
+            issues_pk = view.kwargs.get('pk')
+            issues = Issue.objects.get(pk=issues_pk)
+            return issues.author == request.user
+
+
         # Cas Project
-        if "pk" in kwargs:
+        if getattr(view, 'basename', None) == 'projects':
             project_id = view.kwargs.get('pk')
             project = Project.objects.get(pk=project_id)
             return project.author == request.user

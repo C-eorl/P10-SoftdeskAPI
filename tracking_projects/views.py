@@ -1,6 +1,6 @@
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 
 from tracking_projects.models import Project, Contributor, Issue, Comment
 from tracking_projects.permissions import IsContributor, IsAuthor

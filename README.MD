@@ -66,17 +66,24 @@ Softdesk/
 
 #### b. Via UV 
 ```bash
-    uv install
+    uv sync
 ```
 
-### 3. Démarrer le serveur
+### 3. Appliquer les migrations
+```bash
+    python manage.py migrate
+    # ou si utilisation UV
+    uv run manage.py runserver
+```
+
+### 4. Démarrer le serveur
 ```bash
     python manage.py runserver
     # ou si utilisation UV
     uv run manage.py runserver
 ```
 
-### 4. Acceder à l'API
+### 5. Acceder à l'API
 
 Utilisez l'url pour acceder à l'API : `http://127.0.0.1:8000/api/v1/`
 
